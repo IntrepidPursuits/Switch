@@ -41,7 +41,15 @@
     return [[self alloc] initSwitchWithImage:switchImage visibleWidth:visibleWidth];
 }
 
--(id)initSwitchWithImage:(UIImage*)switchImage visibleWidth:(CGFloat)visibleWidth
++(Switch*)switchWithImage:(UIImage *)switchImage
+             visibleWidth:(CGFloat)visibleWidth
+                  onColor:(UIColor *)onColor
+                 offColor:(UIColor *)offColor
+{
+    return [[self alloc] initSwitchWithImage:switchImage visibleWidth:visibleWidth onColor:onColor offColor:offColor];
+}
+
+-(id)initSwitchWithImage:(UIImage*)switchImage visibleWidth:(CGFloat)visibleWidth onColor:(UIColor *)onColor offColor:(UICOlor *)offColor
 {
     if(self = [super init])
     {
@@ -58,6 +66,9 @@
         
         self.image = _image;
         self.on = YES;
+        
+        self.onColor = onColor;
+        self.offColor = offColor;
         
         UIPanGestureRecognizer* panRecognizer =
         [[UIPanGestureRecognizer alloc] initWithTarget:self
@@ -115,6 +126,10 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^
      {
+         if (self.onColor && self.offColor) {
+             imgVw.backgroundColor = _on ? self.onColor : self.offColor;
+         }
+         
          self.userInteractionEnabled = NO;
          imgVw.frame = CGRectMake((_on ? 0 : -(imgVw.frame.size.width-_visibleWidth)), 0,
                                   imgVw.frame.size.width,
