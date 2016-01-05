@@ -46,8 +46,16 @@ add -fobjc-arc flag for Switch.m file in Build Phases -> Compile Sources.
 //ON-OFF toggle boolean
 @property(nonatomic,assign)BOOL on;
 
+@property (nonatomic, strong) UIColor *onColor;
+@property (nonatomic, strong) UIColor *offColor;
+
 //Class Helper to instantiate Switch with image & expected visibleWidth
 +(Switch*)switchWithImage:(UIImage*)switchImage
              visibleWidth:(CGFloat)visibleWidth;
+
++(Switch*)switchWithImage:(UIImage *)switchImage
+             visibleWidth:(CGFloat)visibleWidth
+                  onColor:(UIColor *)onColor
+                 offColor:(UIColor *)offColor;
 
 @end
