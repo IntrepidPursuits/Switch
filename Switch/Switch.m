@@ -23,7 +23,6 @@
  */
 
 #import "Switch.h"
-#define Scale [UIScreen mainScreen].scale
 
 @interface Switch()
 {
@@ -58,7 +57,7 @@
         _origin = CGPointZero;
         
         self.frame = CGRectMake(_origin.x, _origin.y,
-                                _visibleWidth, _image.size.height/Scale);
+                                _visibleWidth, _image.size.height);
         self.clipsToBounds = YES;
         
         imgVw = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -92,8 +91,8 @@
     _visibleWidth = visibleWidth;
     
     self.frame = CGRectMake(_origin.x, _origin.y, _visibleWidth, self.frame.size.height);
-    imgVw.frame = CGRectMake((_on ? 0 : -(_image.size.width/Scale - _visibleWidth)), 0,
-                             _image.size.width/Scale, _image.size.height/Scale);
+    imgVw.frame = CGRectMake((_on ? 0 : -(_image.size.width - _visibleWidth)), 0,
+                             _image.size.width, _image.size.height);
 }
 
 -(void)setOrigin:(CGPoint)origin
@@ -107,9 +106,9 @@
 {
     _image = image;
     
-    self.frame = CGRectMake(_origin.x, _origin.y, _visibleWidth, _image.size.height/Scale);
-    imgVw.frame = CGRectMake((_on ? 0 : -(_image.size.width/Scale - _visibleWidth)), 0,
-                             _image.size.width/Scale, _image.size.height/Scale);
+    self.frame = CGRectMake(_origin.x, _origin.y, _visibleWidth, _image.size.height);
+    imgVw.frame = CGRectMake((_on ? 0 : -(_image.size.width - _visibleWidth)), 0,
+                             _image.size.width, _image.size.height);
     imgVw.image = _image;
 }
 
