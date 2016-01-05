@@ -37,7 +37,7 @@
 +(Switch*)switchWithImage:(UIImage*)switchImage
              visibleWidth:(CGFloat)visibleWidth
 {
-    return [[self alloc] initSwitchWithImage:switchImage visibleWidth:visibleWidth];
+    return [[self alloc] initSwitchWithImage:switchImage visibleWidth:visibleWidth onColor:nil offColor:nil];
 }
 
 +(Switch*)switchWithImage:(UIImage *)switchImage
@@ -48,7 +48,7 @@
     return [[self alloc] initSwitchWithImage:switchImage visibleWidth:visibleWidth onColor:onColor offColor:offColor];
 }
 
--(id)initSwitchWithImage:(UIImage*)switchImage visibleWidth:(CGFloat)visibleWidth onColor:(UIColor *)onColor offColor:(UICOlor *)offColor
+-(id)initSwitchWithImage:(UIImage*)switchImage visibleWidth:(CGFloat)visibleWidth onColor:(UIColor *)onColor offColor:(UIColor *)offColor
 {
     if(self = [super init])
     {
