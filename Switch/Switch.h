@@ -47,7 +47,7 @@ add -fobjc-arc flag for Switch.m file in Build Phases -> Compile Sources.
 @property(nonatomic,assign)BOOL on;
 
 @property (nonatomic, strong) UIColor *onColor;
-@property (nonatomic, strong) UIImage *offColor;
+@property (nonatomic, strong) UIColor *offColor;
 
 //Class Helper to instantiate Switch with image & expected visibleWidth
 +(Switch*)switchWithImage:(UIImage*)switchImage
