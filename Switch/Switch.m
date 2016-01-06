@@ -28,6 +28,8 @@
 {
     UIImageView* imgVw;
     CGFloat gestureStartXOffset;
+    CGFloat leftGestureTranslationLimit;
+    CGFloat rightGestureTranslationLimit;
 }
 
 @end
@@ -141,17 +143,21 @@
         case UIGestureRecognizerStateBegan:
         {
             gestureStartXOffset = imgVw.frame.origin.x;
+            leftGestureTranslationLimit = gestureStartXOffset - (imgVw.frame.size.width-_visibleWidth);
+            rightGestureTranslationLimit = (imgVw.frame.size.width-_visibleWidth);
         }
             break;
             
         case UIGestureRecognizerStateChanged:
         {
-            if(_on && translationX < 0.0f)
+            BOOL allowLeftTranslation = translationX >= leftGestureTranslationLimit;
+            BOOL allowRightTranslation = translationX <= rightGestureTranslationLimit;
+            if(_on && translationX < 0.0f && allowLeftTranslation)
             {
                 imgVw.frame = CGRectMake(translationX, 0,
                                          imgVw.frame.size.width, imgVw.frame.size.height);
             }
-            else if(!_on && translationX > 0.0f)
+            else if(!_on && translationX > 0.0f && allowRightTranslation)
             {
                 imgVw.frame = CGRectMake(gestureStartXOffset + translationX, 0,
                                          imgVw.frame.size.width, imgVw.frame.size.height);
