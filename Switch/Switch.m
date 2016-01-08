@@ -39,10 +39,18 @@
 +(Switch*)switchWithImage:(UIImage*)switchImage
              visibleWidth:(CGFloat)visibleWidth
 {
-    return [[self alloc] initSwitchWithImage:switchImage visibleWidth:visibleWidth];
+    return [[self alloc] initSwitchWithImage:switchImage visibleWidth:visibleWidth onColor:nil offColor:nil];
 }
 
--(id)initSwitchWithImage:(UIImage*)switchImage visibleWidth:(CGFloat)visibleWidth
++(Switch*)switchWithImage:(UIImage*)switchImage
+             visibleWidth:(CGFloat)visibleWidth
+                  onColor:(UIColor*)onColor
+                 offColor:(UIColor*)offColor
+{
+    return [[self alloc] initSwitchWithImage:switchImage visibleWidth:visibleWidth onColor:onColor offColor:offColor];
+}
+
+-(id)initSwitchWithImage:(UIImage*)switchImage visibleWidth:(CGFloat)visibleWidth onColor:(UIColor *)onColor offColor:(UIColor *)offColor
 {
     if(self = [super init])
     {
@@ -59,6 +67,9 @@
         
         self.image = _image;
         self.on = YES;
+        
+        self.onColor = onColor;
+        self.offColor = offColor;
         
         UIPanGestureRecognizer* panRecognizer =
         [[UIPanGestureRecognizer alloc] initWithTarget:self
@@ -116,6 +127,10 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^
      {
+         if (self.onColor && self.offColor) {
+             imgVw.backgroundColor = _on ? self.onColor : self.offColor;
+         }
+         
          self.userInteractionEnabled = NO;
          imgVw.frame = CGRectMake((_on ? 0 : -(imgVw.frame.size.width-_visibleWidth)), 0,
                                   imgVw.frame.size.width,
@@ -156,11 +171,17 @@
             {
                 imgVw.frame = CGRectMake(translationX, 0,
                                          imgVw.frame.size.width, imgVw.frame.size.height);
+                if (self.onColor && self.offColor) {
+                    imgVw.backgroundColor = [self colorAtTranslation:translationX limit:leftGestureTranslationLimit];
+                }
             }
             else if(!_on && translationX > 0.0f && allowRightTranslation)
             {
                 imgVw.frame = CGRectMake(gestureStartXOffset + translationX, 0,
                                          imgVw.frame.size.width, imgVw.frame.size.height);
+                if (self.onColor && self.offColor) {
+                    imgVw.backgroundColor = [self colorAtTranslation:translationX limit:rightGestureTranslationLimit];
+                }
             }
         }
             break;
@@ -185,6 +206,29 @@
 -(void)handleTap:(UITapGestureRecognizer*)tapRecognizer
 {
     self.on = !_on;
+}
+
+- (UIColor*)colorAtTranslation:(CGFloat)translation limit:(CGFloat)limit {
+    CGFloat progress = (translation - limit) / -(limit);
+    if (limit < 0) {
+        progress = 1 - progress;
+    }
+    
+    CGFloat onRed, offRed, onGreen, offGreen, onBlue, offBlue, onAlpha, offAlpha;
+    [self.onColor getRed:&onRed green:&onGreen blue:&onBlue alpha:&onAlpha];
+    [self.offColor getRed:&offRed green:&offGreen blue:&offBlue alpha:&offAlpha];
+    
+    CGFloat lerpedRed = [self lerpStart:onRed end:offRed progress:progress];
+    CGFloat lerpedGreen = [self lerpStart:onGreen end:offGreen progress:progress];
+    CGFloat lerpedBlue = [self lerpStart:onBlue end:offBlue progress:progress];
+    CGFloat lerpedAlpha = [self lerpStart:onAlpha end:offAlpha progress:progress];
+    
+    return [UIColor colorWithRed:lerpedRed green:lerpedGreen blue:lerpedBlue alpha:lerpedAlpha];
+}
+
+- (CGFloat)lerpStart:(CGFloat)start end:(CGFloat)end progress:(CGFloat)progress {
+    progress = fmaxf(0, fminf(1, progress));
+    return start + (end - start) * progress;
 }
 
 @end
